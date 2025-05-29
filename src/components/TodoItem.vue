@@ -1,9 +1,12 @@
 <!-- src/components/TodoItem.vue -->
 <template>
-  <li>{{ tarefa.nome }}</li>
+  <li><router-link :to="'show/' + tarefa.id">
+      {{ tarefa.nome }}
+    </router-link></li>
 </template>
 
 <script setup>
+
 defineProps({
   tarefa: {
     type: Object,

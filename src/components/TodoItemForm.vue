@@ -14,7 +14,6 @@
 </template>
 
 <script setup>
-import { c } from 'vite/dist/node/moduleRunnerTransport.d-DJ_mE5sf'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -32,6 +31,7 @@ function guardarTarefa() {
       nome: novaTarefa.value.nome.trim(),
       descricao: novaTarefa.value.descricao.trim(),
       dataLimite: novaTarefa.value.dataLimite,
+      concluida: false,
       criadoEm: new Date().toISOString(),
       atualizadoEm: new Date().toISOString()
     }

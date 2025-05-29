@@ -2,6 +2,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import TodoList from '../components/TodoList.vue'
 import TodoItemForm from '@/components/TodoItemForm.vue'
+import TodoItemShow from '@/components/TodoItemShow.vue'
 
 const routes = [
   {
@@ -9,11 +10,17 @@ const routes = [
     name: 'Home',
     component: TodoList
   },
-    {
+  {
     path: '/add',
     name: 'AddTodo',
     component: TodoItemForm
+  },
+  {
+    path: '/show/:id',
+    name: 'ShowTodo',
+    component: TodoItemShow
   }
+
 ]
 
 const router = createRouter({
