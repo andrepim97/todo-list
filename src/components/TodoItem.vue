@@ -1,12 +1,12 @@
 <!-- src/components/TodoItem.vue -->
 <template>
-  <li>{{ tarefa }}</li>
+  <li>{{ tarefa.nome }}</li>
 </template>
 
 <script setup>
 defineProps({
   tarefa: {
-    type: String,
+    type: Object,
     required: true
   }
 })

@@ -2,22 +2,39 @@
 <template>
   <div>
     <h2>Adicionar Nova Tarefa</h2>
-    <input v-model="novaTarefa" placeholder="Nova tarefa" @keyup.enter="guardarTarefa" />
+    <input type="text" v-model="novaTarefa.nome" placeholder="Nome da tarefa" required />
+    <br>
+    <input type="text" v-model="novaTarefa.descricao" placeholder="Descrição da tarefa" required />
+    <br>
+    <input type="date" v-model="novaTarefa.dataLimite" placeholder="Descrição da tarefa" />
+    <br>
     <button @click="guardarTarefa">Guardar</button>
-            <button @click=cancel>Cancelar</button>
+    <button @click=cancel>Cancelar</button>
   </div>
 </template>
 
 <script setup>
+import { c } from 'vite/dist/node/moduleRunnerTransport.d-DJ_mE5sf'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const novaTarefa = ref('')
+const novaTarefa = ref({
+  nome: '',
+  descricao: '',
+  dataLimite: null
+})
 
 function guardarTarefa() {
-  if (novaTarefa.value.trim()) {
-    const tarefa = novaTarefa.value.trim()
+  if (novaTarefa.value.nome.trim()) {
+    const tarefa = {
+      id: Date.now(), // Gerar um ID único baseado no timestamp
+      nome: novaTarefa.value.nome.trim(),
+      descricao: novaTarefa.value.descricao.trim(),
+      dataLimite: novaTarefa.value.dataLimite,
+      criadoEm: new Date().toISOString(),
+      atualizadoEm: new Date().toISOString()
+    }
 
     // Obter tarefas existentes
     const guardadas = localStorage.getItem('tarefas')
@@ -34,8 +51,16 @@ function guardarTarefa() {
   }
 }
 
+function clearForm() {
+  novaTarefa.value = {
+    nome: '',
+    descricao: '',
+    dataLimite: null
+  }
+}
+
 function cancel() {
+  clearForm()
   router.push('/')
 }
 </script>
-
