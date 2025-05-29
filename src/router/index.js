@@ -19,8 +19,13 @@ const routes = [
     path: '/show/:id',
     name: 'ShowTodo',
     component: TodoItemShow
-  }
+  },
 
+  {
+    path: '/edit/:id',
+    name: 'EditTodo',
+    component: TodoItemForm
+  }
 ]
 
 const router = createRouter({

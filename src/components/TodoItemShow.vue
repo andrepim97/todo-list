@@ -1,6 +1,6 @@
 <template>
     <div v-if="tarefa">
-        <h2>{{ tarefa.nome }}</h2>
+        <h2>{{ "Detalhes da Tarefa \"" + tarefa.nome + "\""}}</h2>
         <p><strong>Descrição:</strong> {{ tarefa.descricao }}</p>
         <p><strong>Data limite:</strong> {{ formatarData(tarefa.dataLimite) }}</p>
         <p><strong>Concluída:</strong> {{ tarefa.concluida ? 'Sim' : 'Não' }}</p>
