@@ -1,10 +1,12 @@
 <template>
     <div>
         <h2>Lista de Tarefas</h2>
+        <router-link to="/add">
+            <button>Adicionar Tarefa</button>
+        </router-link>
         <ul>
             <TodoItem v-for="(tarefa, index) in tarefas" :key="index" :tarefa="tarefa" />
         </ul>
-        <input v-model="novaTarefa" @keyup.enter="adicionarTarefa" placeholder="Nova tarefa..." />
     </div>
 </template>
 
