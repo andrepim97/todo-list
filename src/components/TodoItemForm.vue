@@ -129,6 +129,7 @@ function guardarTarefa() {
   }
 
   localStorage.setItem('tarefas', JSON.stringify(tarefas))
+
   router.push('/')
 }
 
