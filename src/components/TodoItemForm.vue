@@ -1,23 +1,34 @@
-<!-- src/components/TodoItemForm.vue -->
 <template>
-  <div>
-    <h2>{{ isEditar ? 'Editar Tarefa' : 'Adicionar Nova Tarefa' }}</h2>
+  <div class="container mt-4">
+    <div class="card">
+      <div class="card-body">
+        <FormTitle :title="isEditar ? 'Editar Tarefa' : 'Adicionar Nova Tarefa'" />
 
-    <input type="text" v-model="novaTarefa.nome" placeholder="Nome da tarefa" required />
-    <br>
-    <input type="text" v-model="novaTarefa.descricao" placeholder="Descrição da tarefa" required />
-    <br>
-    <input type="date" v-model="novaTarefa.dataLimite" />
-    <br>
+        <Input v-model="novaTarefa.nome" label="Nome" placeholder="Nome da tarefa" required />
+        <Input v-model="novaTarefa.descricao" label="Descrição" placeholder="Descrição da tarefa" required />
+        <Input v-model="novaTarefa.dataLimite" label="Data Limite" type="date" />
 
-    <button @click="guardarTarefa">{{ isEditar ? 'Atualizar' : 'Guardar' }}</button>
-    <button @click="cancel">Cancelar</button>
+        <div class="d-flex gap-2 mt-3">
+          <ActionButton @click="cancel" type="button" class-name="btn-danger">
+            Cancelar
+          </ActionButton>
+          <ActionButton @click="guardarTarefa">
+            {{ isEditar ? 'Atualizar' : 'Guardar' }}
+          </ActionButton>
+
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+
+import Input from '@/components/ui/Input.vue'
+import FormTitle from '@/components/ui/FormTitle.vue'
+import ActionButton from '@/components/ui/ActionButton.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -38,7 +49,6 @@ onMounted(() => {
       isEditar.value = true
       novaTarefa.value = { ...tarefaExistente }
     } else {
-      // Se não encontrar a tarefa, redireciona
       router.push('/')
     }
   }
@@ -50,14 +60,12 @@ function guardarTarefa() {
   const tarefas = JSON.parse(localStorage.getItem('tarefas') || '[]')
 
   if (isEditar.value) {
-    // Atualizar tarefa existente
     const index = tarefas.findIndex(t => t.id === novaTarefa.value.id)
     if (index !== -1) {
       novaTarefa.value.atualizadoEm = new Date().toISOString()
       tarefas[index] = { ...novaTarefa.value }
     }
   } else {
-    // Criar nova tarefa
     const nova = {
       id: Date.now(),
       nome: novaTarefa.value.nome.trim(),
@@ -74,16 +82,7 @@ function guardarTarefa() {
   router.push('/')
 }
 
-function clearForm() {
-  novaTarefa.value = {
-    nome: '',
-    descricao: '',
-    dataLimite: null
-  }
-}
-
 function cancel() {
-  clearForm()
   router.push('/')
 }
 </script>
