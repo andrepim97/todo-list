@@ -4,18 +4,34 @@
       <div class="card-body">
         <FormTitle :title="isEditar ? 'Editar Tarefa' : 'Adicionar Nova Tarefa'" />
 
-        <Input v-model="novaTarefa.nome" label="Nome" placeholder="Nome da tarefa" required />
-        <Input v-model="novaTarefa.descricao" label="Descrição" placeholder="Descrição da tarefa" required />
-        <Input v-model="novaTarefa.dataLimite" label="Data Limite" type="date" />
+        <Input 
+          v-model="novaTarefa.nome" 
+          label="Nome" 
+          placeholder="Nome da tarefa" 
+          required
+          :error="erros.nome" 
+          @input="ativarValidacao"
+        />
+        <Input 
+          v-model="novaTarefa.descricao" 
+          label="Descrição" 
+          placeholder="Descrição da tarefa" 
+          @input="ativarValidacao"
+        />
+        <Input 
+          v-model="novaTarefa.dataLimite" 
+          label="Data Limite" 
+          type="date" 
+          @input="ativarValidacao"
+        />
 
         <div class="d-flex gap-2 mt-3">
           <ActionButton @click="cancel" type="button" class-name="btn-danger">
             Cancelar
           </ActionButton>
-          <ActionButton @click="guardarTarefa">
+          <ActionButton @click="guardarTarefa" :disabled="!formValido">
             {{ isEditar ? 'Atualizar' : 'Guardar' }}
           </ActionButton>
-
         </div>
       </div>
     </div>
@@ -23,7 +39,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import Input from '@/components/ui/Input.vue'
@@ -40,6 +56,15 @@ const novaTarefa = ref({
   dataLimite: null
 })
 
+const erros = ref({
+  nome: '',
+  descricao: '',
+  dataLimite: ''
+})
+
+// Indica se o utilizador já tentou submeter (ativa validação)
+const formTentado = ref(false)
+
 onMounted(() => {
   const id = route.params.id
   if (id) {
@@ -54,8 +79,33 @@ onMounted(() => {
   }
 })
 
+function validarCampos() {
+  erros.value = { nome: '', descricao: '', dataLimite: '' }
+
+  // Se o utilizador ainda não tentou submeter, não validar
+  if (!formTentado.value) {
+    return true
+  }
+
+  let valido = true
+
+  if (!novaTarefa.value.nome.trim()) {
+    erros.value.nome = 'O nome é obrigatório.'
+    valido = false
+  }
+
+  return valido
+}
+
+// Computed para controlar se o form está válido (para o botão)
+const formValido = computed(() => validarCampos())
+
 function guardarTarefa() {
-  if (!novaTarefa.value.nome.trim()) return
+  formTentado.value = true
+
+  if (!validarCampos()) {
+    return
+  }
 
   const tarefas = JSON.parse(localStorage.getItem('tarefas') || '[]')
 
@@ -84,5 +134,12 @@ function guardarTarefa() {
 
 function cancel() {
   router.push('/')
+}
+
+// Quando o utilizador começa a escrever, ativa validação para feedback imediato
+function ativarValidacao() {
+  if (!formTentado.value) {
+    formTentado.value = true
+  }
 }
 </script>
