@@ -5,23 +5,27 @@
             <button>Adicionar Tarefa</button>
         </router-link>
         <ul>
-            <TodoItem v-for="(tarefa, index) in tarefas" :key="index" :tarefa="tarefa" />
+            <TodoItem v-for="(tarefa, index) in tarefas" :key="index" :tarefa="tarefa"/>
         </ul>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
 import TodoItem from './TodoItem.vue'
 
 const tarefas = ref([])
-const novaTarefa = ref('')
 
-function adicionarTarefa() {
-    if (novaTarefa.value.trim()) {
-        tarefas.value.push(novaTarefa.value.trim())
-        novaTarefa.value = ''
-    }
-}
+onMounted(() => {
+  const guardadas = localStorage.getItem('tarefas')
+  if (guardadas) {
+    tarefas.value = JSON.parse(guardadas)
+  }
+})
+
+watch(tarefas, (novas) => {
+  localStorage.setItem('tarefas', JSON.stringify(novas))
+}, { deep: true })
+
 </script>
