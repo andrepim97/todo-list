@@ -1,30 +1,15 @@
 <template>
-  <PageWrapper :title="isEditar ? 'Editar Tarefa' : 'Adicionar Nova Tarefa'">
+  <PageWrapper :title="isEditar ? 'Editar Tarefa' : 'Adicionar Nova Tarefa'" :breadcrumbs="breadcrumbs">
     <template #icon>
       <i class="bi bi-pencil-square me-2"></i>
     </template>
 
     <div>
-      <Input
-        v-model="novaTarefa.nome"
-        label="Nome"
-        placeholder="Nome da tarefa"
-        required
-        :error="erros.nome"
-        @input="ativarValidacao"
-      />
-      <Input
-        v-model="novaTarefa.descricao"
-        label="Descrição"
-        placeholder="Descrição da tarefa"
-        @input="ativarValidacao"
-      />
-      <Input
-        v-model="novaTarefa.dataLimite"
-        label="Data Limite"
-        type="date"
-        @input="ativarValidacao"
-      />
+      <Input v-model="novaTarefa.nome" label="Nome" placeholder="Nome da tarefa" required :error="erros.nome"
+        @input="ativarValidacao" />
+      <Input v-model="novaTarefa.descricao" label="Descrição" placeholder="Descrição da tarefa"
+        @input="ativarValidacao" />
+      <Input v-model="novaTarefa.dataLimite" label="Data Limite" type="date" @input="ativarValidacao" />
 
       <div class="mb-3">
         <label for="prioridade" class="form-label">Prioridade</label>
@@ -75,11 +60,18 @@ const erros = ref({
 
 const formTentado = ref(false)
 
+const breadcrumbs = ref([])
+
 onMounted(() => {
   const id = route.params.id
   if (id) {
     const tarefas = JSON.parse(localStorage.getItem('tarefas') || '[]')
     const tarefaExistente = tarefas.find(t => t.id.toString() === id)
+
+    breadcrumbs.value = [
+      { text: 'Tarefas', link: '/' },
+      { text: tarefaExistente.nome, link: '/show' + id }
+    ]
 
     if (tarefaExistente) {
       isEditar.value = true
@@ -87,6 +79,12 @@ onMounted(() => {
     } else {
       router.push('/')
     }
+  } else {
+
+    breadcrumbs.value = [
+      { text: 'Tarefas', link: '/' },
+      { text: 'Nova Tarefa', link: '/add' }
+    ]
   }
 })
 

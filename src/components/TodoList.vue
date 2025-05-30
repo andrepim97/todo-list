@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper title="Lista de Tarefas">
+  <PageWrapper title="Lista de Tarefas" :show-back="false" :breadcrumbs="breadcrumbs">
     <template #icon>
       <i class="bi bi-list-task me-2"></i>
     </template>
@@ -50,6 +50,10 @@ import { useTarefas } from '@/composables/useTarefas.js'
 const { tarefas, carregar } = useTarefas()
 
 const termoPesquisa = ref('')
+
+const breadcrumbs = [
+  { text: 'Tarefas', link: '/' },
+]
 
 const tarefasFiltradas = computed(() => {
   if (!termoPesquisa.value.trim()) return tarefas.value
