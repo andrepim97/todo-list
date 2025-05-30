@@ -96,7 +96,7 @@ const breadcrumbs = [
 
 const buttons = [
     {
-        text: t('addTask'),
+        text: 'addTask',
         to: '/add',
         class: 'btn-primary',
     },
