@@ -5,6 +5,7 @@
       <router-link :to="'/show/' + tarefa.id" :class="{ 'text-decoration-line-through text-muted': tarefa.concluida }"
         class="fw-semibold">
         {{ tarefa.nome }}
+        <span v-if="verificaAtraso(tarefa)" class="badge bg-danger ms-2">Em atraso</span>
       </router-link>
     </div>
 
@@ -21,7 +22,6 @@
 
 <script setup>
 import { defineProps, defineEmits } from 'vue'
-import { useRouter } from 'vue-router'
 
 const props = defineProps({
   tarefa: {
@@ -32,7 +32,15 @@ const props = defineProps({
 
 const emit = defineEmits(['atualizar'])
 
-const router = useRouter()
+const verificaAtraso = (tarefa) => {
+  if (tarefa.dataLimite && !tarefa.concluida) {
+    const dataLimite = new Date(tarefa.dataLimite)
+    const hoje = new Date()
+    hoje.setHours(0, 0, 0, 0)
+    return dataLimite < hoje
+  }
+  return false
+}
 
 function toggleConcluida(event) {
   const tarefas = JSON.parse(localStorage.getItem('tarefas') || '[]')
