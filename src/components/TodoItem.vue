@@ -5,7 +5,8 @@
       <router-link :to="'/show/' + tarefa.id" :class="{ 'text-decoration-line-through text-muted': tarefa.concluida }"
         class="fw-semibold">
         {{ tarefa.nome }}
-        <span v-if="verificaAtraso(tarefa)" class="badge bg-danger ms-2">Em atraso</span>
+        <span v-if="verificaAtraso(tarefa)" class="badge bg-danger ms-2">Em atraso ({{ calcularAtraso(tarefa)
+          }} dias)</span>
       </router-link>
     </div>
 
@@ -40,6 +41,22 @@ const verificaAtraso = (tarefa) => {
     return dataLimite < hoje
   }
   return false
+}
+
+const calcularAtraso = (tarefa) => {
+  if (tarefa.dataLimite && !tarefa.concluida) {
+    const dataLimite = new Date(tarefa.dataLimite);
+    const hoje = new Date();
+
+    // Calculate the difference in milliseconds
+    const diferencaEmMilissegundos = hoje.getTime() - dataLimite.getTime();
+
+    // Convert milliseconds to days
+    const diferencaEmDias = Math.ceil(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));
+
+    return diferencaEmDias;
+  }
+  return 0
 }
 
 function toggleConcluida(event) {
