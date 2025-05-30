@@ -66,6 +66,7 @@ onMounted(() => {
   if (id) {
     const tarefas = JSON.parse(localStorage.getItem('tarefas') || '[]')
     const tarefaExistente = tarefas.find(t => t.id.toString() === id)
+
     if (tarefaExistente) {
       isEditar.value = true
       novaTarefa.value = { ...tarefaExistente }
