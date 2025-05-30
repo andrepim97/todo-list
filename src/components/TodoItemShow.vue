@@ -9,69 +9,85 @@
       <i class="bi bi-list-check me-2"></i>
     </template>
 
-    <h5 class="fw-bold mb-4">{{ tarefa.nome }}</h5>
+    <!-- Cabeçalho com nome da tarefa -->
+    <div class="d-flex justify-content-between align-items-start flex-wrap mb-4">
+      <h3 class="fw-bold text-primary mb-2">{{ tarefa.nome }}</h3>
+    </div>
 
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item d-flex align-items-start gap-3">
-        <i class="bi bi-card-text fs-5 text-primary"></i>
-        <div>
-          <strong>Descrição:</strong><br />
-          <span class="text-break">{{ tarefa.descricao || 'Sem descrição.' }}</span>
-        </div>
-      </li>
+    <!-- Descrição -->
+    <section class="mb-4">
+      <h6 class="text-muted">Descrição</h6>
+      <p class="text-break mb-0">
+        {{ tarefa.descricao || 'Sem descrição.' }}
+      </p>
+    </section>
 
-      <li class="list-group-item d-flex align-items-center gap-3">
-        <i class="bi bi-calendar-event fs-5 text-info"></i>
-        <div>
-          <strong>Data limite:</strong> {{ formatarData(tarefa.dataLimite) }}
+    <!-- Detalhes -->
+    <section class="mb-4">
+      <h6 class="text-muted">Detalhes</h6>
+      <div class="row gy-3">
+        <div class="col-md-6 d-flex gap-2">
+          <i class="bi bi-calendar-event text-info fs-5"></i>
+          <div>
+            <strong>Data limite:</strong><br />
+            {{ formatarData(tarefa.dataLimite) }}
+          </div>
         </div>
-      </li>
 
-      <li class="list-group-item d-flex align-items-center gap-3">
-        <i class="bi bi-exclamation-circle fs-5 text-warning"></i>
-        <div>
-          <strong>Prioridade:</strong>
-          <span
-            class="badge"
-            :class="{
-              'bg-secondary': !tarefa.prioridade,
-              'bg-success': tarefa.prioridade === 'baixa',
-              'bg-warning text-dark': tarefa.prioridade === 'media',
-              'bg-danger': tarefa.prioridade === 'alta'
-            }"
-          >
-            {{ converterPrioridade(tarefa.prioridade) }}
-          </span>
+        <div class="col-md-6 d-flex gap-2">
+          <i class="bi bi-exclamation-circle text-warning fs-5"></i>
+          <div>
+            <strong>Prioridade:</strong><br />
+            <span
+              class="badge"
+              :class="{
+                'bg-secondary': !tarefa.prioridade,
+                'bg-success': tarefa.prioridade === 'baixa',
+                'bg-warning text-dark': tarefa.prioridade === 'media',
+                'bg-danger': tarefa.prioridade === 'alta'
+              }"
+            >
+              {{ converterPrioridade(tarefa.prioridade) }}
+            </span>
+          </div>
         </div>
-      </li>
 
-      <li class="list-group-item d-flex align-items-center gap-3">
-        <i
-          class="bi bi-check-circle fs-5"
-          :class="tarefa.concluida ? 'text-success' : 'text-danger'"
-        ></i>
-        <div>
-          <strong>Concluída:</strong>
-          <span :class="tarefa.concluida ? 'text-success' : 'text-danger'">
-            {{ tarefa.concluida ? 'Sim' : 'Não' }}
-          </span>
+        <div class="col-md-6 d-flex gap-2">
+          <i
+            class="bi bi-check-circle fs-5"
+            :class="tarefa.concluida ? 'text-success' : 'text-danger'"
+          ></i>
+          <div>
+            <strong>Concluída:</strong><br />
+            <span class="badge" :class="tarefa.concluida ? 'bg-success' : 'bg-danger'">
+              {{ tarefa.concluida ? 'Sim' : 'Não' }}
+            </span>
+          </div>
         </div>
-      </li>
+      </div>
+    </section>
 
-      <li class="list-group-item d-flex align-items-center gap-3">
-        <i class="bi bi-clock-history fs-5 text-secondary"></i>
-        <div>
-          <strong>Criado em:</strong> {{ formatarData(tarefa.criadoEm) }}
+    <!-- Datas -->
+    <section>
+      <h6 class="text-muted">Registo</h6>
+      <div class="row gy-3">
+        <div class="col-md-6 d-flex gap-2">
+          <i class="bi bi-clock-history text-secondary fs-5"></i>
+          <div>
+            <strong>Criado em:</strong><br />
+            {{ formatarData(tarefa.criadoEm) }}
+          </div>
         </div>
-      </li>
 
-      <li class="list-group-item d-flex align-items-center gap-3">
-        <i class="bi bi-pencil-square fs-5 text-secondary"></i>
-        <div>
-          <strong>Atualizado em:</strong> {{ formatarData(tarefa.atualizadoEm) }}
+        <div class="col-md-6 d-flex gap-2">
+          <i class="bi bi-pencil-square text-secondary fs-5"></i>
+          <div>
+            <strong>Atualizado em:</strong><br />
+            {{ formatarData(tarefa.atualizadoEm) }}
+          </div>
         </div>
-      </li>
-    </ul>
+      </div>
+    </section>
   </PageWrapper>
 </template>
 
