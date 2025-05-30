@@ -58,7 +58,11 @@
 <script setup>
 
 import { defineProps } from 'vue'
+import { useI18n } from 'vue-i18n'
+
 import LanguageSelector from '@/components/LanguageSelector.vue'
+
+const { locale } = useI18n()
 
 defineProps({
     title: {
@@ -86,8 +90,7 @@ defineProps({
 })
 
 function onLanguageChange(lang) {
-    console.log('Idioma selecionado:', lang)
-    // Aqui podes implementar lógica para aplicar a tradução (ex: Vue I18n)
+    locale.value = lang
 }
 </script>
 
