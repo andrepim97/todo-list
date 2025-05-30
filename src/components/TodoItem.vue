@@ -1,25 +1,26 @@
-<!-- src/components/TodoItem.vue -->
 <template>
-  <li class="d-flex align-items-center justify-content-between mb-2">
-    <div>
-      <input type="checkbox" :checked="tarefa.concluida" @change="toggleConcluida" />
-      <router-link :to="'show/' + tarefa.id" :class="{ 'text-decoration-line-through': tarefa.concluida }">
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-2">
+      <input type="checkbox" class="form-check-input mt-0" :checked="tarefa.concluida" @change="toggleConcluida" />
+      <router-link :to="'/show/' + tarefa.id" :class="{ 'text-decoration-line-through text-muted': tarefa.concluida }"
+        class="fw-semibold">
         {{ tarefa.nome }}
       </router-link>
     </div>
-    <div>
-      <router-link :to="'edit/' + tarefa.id" class="btn btn-sm btn-primary me-2">
-        Editar
+
+    <div class="d-flex gap-2">
+      <router-link :to="'/edit/' + tarefa.id" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
+        <i class="bi bi-pencil"></i> Editar
       </router-link>
-      <button @click="eliminarTarefa" class="btn btn-sm btn-danger">
-        Eliminar
+      <button @click="eliminarTarefa" class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1">
+        <i class="bi bi-trash"></i> Eliminar
       </button>
     </div>
   </li>
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({
@@ -28,6 +29,8 @@ const props = defineProps({
     required: true
   }
 })
+
+const emit = defineEmits(['atualizar'])
 
 const router = useRouter()
 
@@ -38,8 +41,9 @@ function toggleConcluida(event) {
     tarefas[index].concluida = event.target.checked
     tarefas[index].atualizadoEm = new Date().toISOString()
     localStorage.setItem('tarefas', JSON.stringify(tarefas))
-    // Opcional: atualizar localmente para refletir imediatamente
     props.tarefa.concluida = event.target.checked
+
+    emit('atualizar')
   }
 }
 
@@ -49,9 +53,8 @@ function eliminarTarefa() {
   let tarefas = JSON.parse(localStorage.getItem('tarefas') || '[]')
   tarefas = tarefas.filter(t => t.id !== props.tarefa.id)
   localStorage.setItem('tarefas', JSON.stringify(tarefas))
-  
-  // Opcional: força reload ou emit evento para atualizar a lista no componente pai
-  router.go()
+
+  emit('atualizar')
 }
 </script>
 

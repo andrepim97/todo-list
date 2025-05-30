@@ -9,7 +9,7 @@
             <li v-if="tarefas.length === 0" class="list-group-item text-center text-muted">
                 Nenhuma tarefa encontrada.
             </li>
-            <TodoItem v-for="tarefa in tarefas" :key="tarefa.id" :tarefa="tarefa" />
+            <TodoItem v-for="tarefa in tarefas" :key="tarefa.id" :tarefa="tarefa" @atualizar="carregar" />
         </ul>
     </div>
 </template>
