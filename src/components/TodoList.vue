@@ -16,7 +16,7 @@
         </div>
 
         <!-- Filtros -->
-        <div class="row g-3 mb-4">
+        <div class="row g-3 mb-3">
             <div class="col-md-6">
                 <label class="form-label">Filtrar por prioridade</label>
                 <select class="form-select" v-model="filtroPrioridade">
@@ -36,9 +36,9 @@
             </div>
         </div>
 
-        <!-- Ordenação -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-6">
+        <!-- Ordenação e Reset -->
+        <div class="row g-3 mb-4 align-items-end">
+            <div class="col-md-5">
                 <label class="form-label">Ordenar por</label>
                 <select class="form-select" v-model="ordenarPor">
                     <option value="criadoEm">Data de criação</option>
@@ -46,10 +46,15 @@
                     <option value="prioridade">Prioridade</option>
                 </select>
             </div>
-            <div class="col-md-6 d-flex align-items-end">
+            <div class="col-md-4 d-flex align-items-center">
                 <button class="btn btn-outline-secondary w-100" @click="ordemAscendente = !ordemAscendente">
                     <i class="bi" :class="ordemAscendente ? 'bi-sort-down' : 'bi-sort-up'"></i>
                     {{ ordemAscendente ? 'Ascendente' : 'Descendente' }}
+                </button>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-outline-danger w-100" @click="resetFilters">
+                    Reset Filters
                 </button>
             </div>
         </div>
@@ -65,7 +70,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import TodoItem from './TodoItem.vue'
 import PageWrapper from '@/components/PageWrapper.vue'
 
@@ -76,9 +81,10 @@ const { tarefas, carregar } = useTarefas()
 const termoPesquisa = ref('')
 const filtroPrioridade = ref('')
 const filtroEstado = ref('')
-
 const ordenarPor = ref('criadoEm')
 const ordemAscendente = ref(false)
+
+const STORAGE_KEY = 'tarefasFiltrosEstado'
 
 const breadcrumbs = [
     { text: 'Tarefas' },
@@ -88,14 +94,48 @@ const buttons = [
     {
         text: 'Adicionar Tarefa',
         to: '/add',
-        class: 'btn-primary'
-    }
+        class: 'btn-primary',
+    },
 ]
+
+// Recuperar filtros do localStorage
+onMounted(() => {
+    carregar()
+    const saved = localStorage.getItem(STORAGE_KEY)
+    if (saved) {
+        try {
+            const estado = JSON.parse(saved)
+            termoPesquisa.value = estado.termoPesquisa ?? ''
+            filtroPrioridade.value = estado.filtroPrioridade ?? ''
+            filtroEstado.value = estado.filtroEstado ?? ''
+            ordenarPor.value = estado.ordenarPor ?? 'criadoEm'
+            ordemAscendente.value = estado.ordemAscendente ?? false
+        } catch {
+            // falhar silenciosamente
+        }
+    }
+})
+
+// Guardar filtros no localStorage sempre que mudarem
+watch(
+    [termoPesquisa, filtroPrioridade, filtroEstado, ordenarPor, ordemAscendente],
+    ([tp, fp, fe, op, oa]) => {
+        const estado = {
+            termoPesquisa: tp,
+            filtroPrioridade: fp,
+            filtroEstado: fe,
+            ordenarPor: op,
+            ordemAscendente: oa,
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(estado))
+    },
+    { deep: true }
+)
 
 const tarefasFiltradas = computed(() => {
     const prioridadePeso = { baixa: 1, media: 2, alta: 3 }
 
-    let resultado = tarefas.value.filter(tarefa => {
+    let resultado = tarefas.value.filter((tarefa) => {
         const termoOk = tarefa.nome.toLowerCase().includes(termoPesquisa.value.toLowerCase())
         const prioridadeOk = !filtroPrioridade.value || tarefa.prioridade === filtroPrioridade.value
         const estadoOk =
@@ -124,7 +164,13 @@ const tarefasFiltradas = computed(() => {
     return resultado
 })
 
-onMounted(() => {
-    carregar()
-})
+// Função para resetar filtros
+function resetFilters() {
+    termoPesquisa.value = ''
+    filtroPrioridade.value = ''
+    filtroEstado.value = ''
+    ordenarPor.value = 'criadoEm'
+    ordemAscendente.value = false
+    localStorage.removeItem(STORAGE_KEY)
+}
 </script>
