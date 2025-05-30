@@ -4,26 +4,21 @@
       <div class="card-body">
         <FormTitle :title="isEditar ? 'Editar Tarefa' : 'Adicionar Nova Tarefa'" />
 
-        <Input 
-          v-model="novaTarefa.nome" 
-          label="Nome" 
-          placeholder="Nome da tarefa" 
-          required
-          :error="erros.nome" 
-          @input="ativarValidacao"
-        />
-        <Input 
-          v-model="novaTarefa.descricao" 
-          label="Descrição" 
-          placeholder="Descrição da tarefa" 
-          @input="ativarValidacao"
-        />
-        <Input 
-          v-model="novaTarefa.dataLimite" 
-          label="Data Limite" 
-          type="date" 
-          @input="ativarValidacao"
-        />
+        <Input v-model="novaTarefa.nome" label="Nome" placeholder="Nome da tarefa" required :error="erros.nome"
+          @input="ativarValidacao" />
+        <Input v-model="novaTarefa.descricao" label="Descrição" placeholder="Descrição da tarefa"
+          @input="ativarValidacao" />
+        <Input v-model="novaTarefa.dataLimite" label="Data Limite" type="date" @input="ativarValidacao" />
+
+        <div class="mb-3">
+          <label for="prioridade" class="form-label">Prioridade</label>
+          <select id="prioridade" class="form-select" v-model="novaTarefa.prioridade">
+            <option :value="null">Sem prioridade</option>
+            <option value="baixa">Baixa</option>
+            <option value="media">Média</option>
+            <option value="alta">Alta</option>
+          </select>
+        </div>
 
         <div class="d-flex gap-2 mt-3">
           <ActionButton @click="cancel" type="button" class-name="btn-danger">
@@ -53,7 +48,8 @@ const isEditar = ref(false)
 const novaTarefa = ref({
   nome: '',
   descricao: '',
-  dataLimite: null
+  dataLimite: null,
+  prioridade: null
 })
 
 const erros = ref({
@@ -121,6 +117,7 @@ function guardarTarefa() {
       nome: novaTarefa.value.nome.trim(),
       descricao: novaTarefa.value.descricao.trim(),
       dataLimite: novaTarefa.value.dataLimite,
+      prioridade: novaTarefa.value.prioridade,
       concluida: false,
       criadoEm: new Date().toISOString(),
       atualizadoEm: new Date().toISOString()

@@ -1,8 +1,9 @@
 <template>
     <div v-if="tarefa">
-        <h2>{{ "Detalhes da Tarefa \"" + tarefa.nome + "\""}}</h2>
+        <h2>{{ "Detalhes da Tarefa \"" + tarefa.nome + "\"" }}</h2>
         <p><strong>Descrição:</strong> {{ tarefa.descricao }}</p>
         <p><strong>Data limite:</strong> {{ formatarData(tarefa.dataLimite) }}</p>
+        <p><strong>Prioridade:</strong> {{ converterPrioridade(tarefa.prioridade) }}</p>
         <p><strong>Concluída:</strong> {{ tarefa.concluida ? 'Sim' : 'Não' }}</p>
         <p><strong>Criado em:</strong> {{ formatarData(tarefa.criadoEm) }}</p>
         <p><strong>Atualizado em:</strong> {{ formatarData(tarefa.atualizadoEm) }}</p>
@@ -31,6 +32,11 @@ const carregarTarefa = () => {
 const formatarData = (data) => {
     if (!data) { return 'N/A' }
     return new Date(data).toLocaleString()
+}
+
+const converterPrioridade = (prioridade) => {
+    if (!prioridade) return 'N/A'
+    return prioridade.charAt(0).toUpperCase() + prioridade.slice(1).toLowerCase()
 }
 
 onMounted(carregarTarefa)
