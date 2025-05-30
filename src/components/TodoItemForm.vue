@@ -1,36 +1,51 @@
 <template>
-  <div class="container mt-4">
-    <div class="card">
-      <div class="card-body">
-        <FormTitle :title="isEditar ? 'Editar Tarefa' : 'Adicionar Nova Tarefa'" />
+  <PageWrapper :title="isEditar ? 'Editar Tarefa' : 'Adicionar Nova Tarefa'">
+    <template #icon>
+      <i class="bi bi-pencil-square me-2"></i>
+    </template>
 
-        <Input v-model="novaTarefa.nome" label="Nome" placeholder="Nome da tarefa" required :error="erros.nome"
-          @input="ativarValidacao" />
-        <Input v-model="novaTarefa.descricao" label="Descrição" placeholder="Descrição da tarefa"
-          @input="ativarValidacao" />
-        <Input v-model="novaTarefa.dataLimite" label="Data Limite" type="date" @input="ativarValidacao" />
+    <div>
+      <Input
+        v-model="novaTarefa.nome"
+        label="Nome"
+        placeholder="Nome da tarefa"
+        required
+        :error="erros.nome"
+        @input="ativarValidacao"
+      />
+      <Input
+        v-model="novaTarefa.descricao"
+        label="Descrição"
+        placeholder="Descrição da tarefa"
+        @input="ativarValidacao"
+      />
+      <Input
+        v-model="novaTarefa.dataLimite"
+        label="Data Limite"
+        type="date"
+        @input="ativarValidacao"
+      />
 
-        <div class="mb-3">
-          <label for="prioridade" class="form-label">Prioridade</label>
-          <select id="prioridade" class="form-select" v-model="novaTarefa.prioridade">
-            <option :value="null">Sem prioridade</option>
-            <option value="baixa">Baixa</option>
-            <option value="media">Média</option>
-            <option value="alta">Alta</option>
-          </select>
-        </div>
+      <div class="mb-3">
+        <label for="prioridade" class="form-label">Prioridade</label>
+        <select id="prioridade" class="form-select" v-model="novaTarefa.prioridade">
+          <option :value="null">Sem prioridade</option>
+          <option value="baixa">Baixa</option>
+          <option value="media">Média</option>
+          <option value="alta">Alta</option>
+        </select>
+      </div>
 
-        <div class="d-flex gap-2 mt-3">
-          <ActionButton @click="cancel" type="button" class-name="btn-danger">
-            Cancelar
-          </ActionButton>
-          <ActionButton @click="guardarTarefa" :disabled="!formValido">
-            {{ isEditar ? 'Atualizar' : 'Guardar' }}
-          </ActionButton>
-        </div>
+      <div class="d-flex gap-2 mt-3">
+        <ActionButton @click="cancel" type="button" class-name="btn-danger">
+          Cancelar
+        </ActionButton>
+        <ActionButton @click="guardarTarefa" :disabled="!formValido">
+          {{ isEditar ? 'Atualizar' : 'Guardar' }}
+        </ActionButton>
       </div>
     </div>
-  </div>
+  </PageWrapper>
 </template>
 
 <script setup>
@@ -38,8 +53,8 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import Input from '@/components/ui/Input.vue'
-import FormTitle from '@/components/ui/FormTitle.vue'
 import ActionButton from '@/components/ui/ActionButton.vue'
+import PageWrapper from '@/components/PageWrapper.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -58,7 +73,6 @@ const erros = ref({
   dataLimite: ''
 })
 
-// Indica se o utilizador já tentou submeter (ativa validação)
 const formTentado = ref(false)
 
 onMounted(() => {
@@ -79,10 +93,7 @@ onMounted(() => {
 function validarCampos() {
   erros.value = { nome: '', descricao: '', dataLimite: '' }
 
-  // Se o utilizador ainda não tentou submeter, não validar
-  if (!formTentado.value) {
-    return true
-  }
+  if (!formTentado.value) return true
 
   let valido = true
 
@@ -94,15 +105,12 @@ function validarCampos() {
   return valido
 }
 
-// Computed para controlar se o form está válido (para o botão)
 const formValido = computed(() => validarCampos())
 
 function guardarTarefa() {
   formTentado.value = true
 
-  if (!validarCampos()) {
-    return
-  }
+  if (!validarCampos()) return
 
   const tarefas = JSON.parse(localStorage.getItem('tarefas') || '[]')
 
@@ -135,10 +143,7 @@ function cancel() {
   router.push('/')
 }
 
-// Quando o utilizador começa a escrever, ativa validação para feedback imediato
 function ativarValidacao() {
-  if (!formTentado.value) {
-    formTentado.value = true
-  }
+  if (!formTentado.value) formTentado.value = true
 }
 </script>
