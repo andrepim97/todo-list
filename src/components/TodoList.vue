@@ -1,5 +1,5 @@
 <template>
-    <PageWrapper title="Lista de Tarefas" :show-back="false" :breadcrumbs="breadcrumbs" :buttons="buttons">
+    <PageWrapper :title="t('taskListTitle')" :show-back="false" :breadcrumbs="breadcrumbs" :buttons="buttons">
         <template #icon>
             <i class="bi bi-list-task me-2"></i>
         </template>
@@ -11,27 +11,27 @@
                     <i class="bi bi-search"></i>
                 </span>
                 <input type="text" v-model="termoPesquisa" class="form-control border-start-0"
-                    placeholder="Pesquisar tarefas..." />
+                    :placeholder="t('searchTasks')" />
             </div>
         </div>
 
         <!-- Filtros -->
         <div class="row g-3 mb-3">
             <div class="col-md-6">
-                <label class="form-label">Filtrar por prioridade</label>
+                <label class="form-label">{{ t('filterByPriority') }}</label>
                 <select class="form-select" v-model="filtroPrioridade">
-                    <option value="">Todas</option>
-                    <option value="baixa">Baixa</option>
-                    <option value="media">Média</option>
-                    <option value="alta">Alta</option>
+                    <option value="">{{ t('all') }}</option>
+                    <option value="baixa">{{ t('low') }}</option>
+                    <option value="media">{{ t('medium') }}</option>
+                    <option value="alta">{{ t('high') }}</option>
                 </select>
             </div>
             <div class="col-md-6">
-                <label class="form-label">Filtrar por estado</label>
+                <label class="form-label">{{ t('filterByStatus') }}</label>
                 <select class="form-select" v-model="filtroEstado">
-                    <option value="">Todas</option>
-                    <option value="concluida">Concluídas</option>
-                    <option value="pendente">Por concluir</option>
+                    <option value="">{{ t('all') }}</option>
+                    <option value="concluida">{{ t('completed') }}</option>
+                    <option value="pendente">{{ t('pending') }}</option>
                 </select>
             </div>
         </div>
@@ -39,22 +39,22 @@
         <!-- Ordenação e Reset -->
         <div class="row g-3 mb-4 align-items-end">
             <div class="col-md-5">
-                <label class="form-label">Ordenar por</label>
+                <label class="form-label">{{ t('sortBy') }}</label>
                 <select class="form-select" v-model="ordenarPor">
-                    <option value="criadoEm">Data de criação</option>
-                    <option value="dataLimite">Data limite</option>
-                    <option value="prioridade">Prioridade</option>
+                    <option value="criadoEm">{{ t('creationDate') }}</option>
+                    <option value="dataLimite">{{ t('dueDate') }}</option>
+                    <option value="prioridade">{{ t('priority') }}</option>
                 </select>
             </div>
             <div class="col-md-4 d-flex align-items-center">
                 <button class="btn btn-outline-secondary w-100" @click="ordemAscendente = !ordemAscendente">
                     <i class="bi" :class="ordemAscendente ? 'bi-sort-down' : 'bi-sort-up'"></i>
-                    {{ ordemAscendente ? 'Ascendente' : 'Descendente' }}
+                    {{ ordemAscendente ? t('ascending') : t('descending') }}
                 </button>
             </div>
             <div class="col-md-3">
                 <button class="btn btn-outline-danger w-100" @click="resetFilters">
-                    Reset Filters
+                    {{ t('resetFilters') }}
                 </button>
             </div>
         </div>
@@ -62,7 +62,7 @@
         <!-- Lista -->
         <ul class="list-group">
             <li v-if="tarefasFiltradas.length === 0" class="list-group-item text-center text-muted">
-                Nenhuma tarefa encontrada.
+                {{ t('noTasksFound') }}
             </li>
             <TodoItem v-for="tarefa in tarefasFiltradas" :key="tarefa.id" :tarefa="tarefa" @atualizar="carregar" />
         </ul>
@@ -71,10 +71,14 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import TodoItem from './TodoItem.vue'
-import PageWrapper from '@/components/PageWrapper.vue'
+import { useI18n } from 'vue-i18n'
 
 import { useTarefas } from '@/composables/useTarefas.js'
+
+import PageWrapper from '@/components/PageWrapper.vue'
+import TodoItem from './TodoItem.vue'
+
+const { t } = useI18n()
 
 const { tarefas, carregar } = useTarefas()
 
@@ -87,12 +91,12 @@ const ordemAscendente = ref(false)
 const STORAGE_KEY = 'tarefasFiltrosEstado'
 
 const breadcrumbs = [
-    { text: 'Tarefas' },
+    { text: t('tasks') },
 ]
 
 const buttons = [
     {
-        text: 'Adicionar Tarefa',
+        text: t('addTask'),
         to: '/add',
         class: 'btn-primary',
     },

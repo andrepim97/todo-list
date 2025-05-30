@@ -2,28 +2,72 @@ import { createI18n } from 'vue-i18n'
 
 const messages = {
   en: {
-    message: {
-      hello: 'Hello World',
-      back: 'Back',
-      tasks: 'Tasks',
-      details: 'Details',
-      // ... outras traduções
-    }
+    back: "Back",
+    edit: "Edit",
+    delete: "Delete",
+    details: "Details",
+
+    taskListTitle: "Task List",
+    searchTasks: "Search tasks...",
+    filterByPriority: "Filter by priority",
+    filterByStatus: "Filter by status",
+    all: "All",
+    low: "Low",
+    medium: "Medium",
+    high: "High",
+    completed: "Completed",
+    pending: "Pending",
+    sortBy: "Sort by",
+    creationDate: "Creation Date",
+    dueDate: "Due Date",
+    priority: "Priority",
+    ascending: "Ascending",
+    descending: "Descending",
+    resetFilters: "Reset Filters",
+    noTasksFound: "No tasks found",
+    tasks: "Tasks",
+    task: "Task",               
+    addTask: "Add Task",
+    overdue: "Overdue",         
+    days: "days",               
+    confirmDelete: "Are you sure you want to delete",  
   },
   pt: {
-    message: {
-      hello: 'Olá Mundo',
-      back: 'Voltar',
-      tasks: 'Tarefas',
-      details: 'Detalhes',
-      // ... outras traduções
-    }
+    back: "Voltar",
+    edit: "Editar",
+    delete: "Eliminar",
+    details: "Detalhes",
+
+    taskListTitle: "Lista de Tarefas",
+    searchTasks: "Pesquisar tarefas...",
+    filterByPriority: "Filtrar por prioridade",
+    filterByStatus: "Filtrar por estado",
+    all: "Todas",
+    low: "Baixa",
+    medium: "Média",
+    high: "Alta",
+    completed: "Concluídas",
+    pending: "Por concluir",
+    sortBy: "Ordenar por",
+    creationDate: "Data de criação",
+    dueDate: "Data limite",
+    priority: "Prioridade",
+    ascending: "Ascendente",
+    descending: "Descendente",
+    resetFilters: "Resetar filtros",
+    noTasksFound: "Nenhuma tarefa encontrada",
+    tasks: "Tarefas",
+    task: "Tarefa",             
+    addTask: "Adicionar Tarefa",
+    overdue: "Em atraso",       
+    days: "dias",               
+    confirmDelete: "Tem a certeza que quer eliminar", 
   }
 }
 
 const i18n = createI18n({
   legacy: false, // para Composition API
-  locale: 'pt', // língua padrão
+  locale: 'pt',  // língua padrão
   fallbackLocale: 'en',
   messages
 })
