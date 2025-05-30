@@ -35,6 +35,19 @@ const messages = {
         overdue: "Overdue",
         days: "days",
         confirmDelete: "Are you sure you want to delete",
+
+        taskDetailsTitle: "Task Details",
+        description: "Description",
+        noDescription: "No description.",
+        detailsSection: "Details",
+        status: "Status",
+        yes: "Yes",
+        no: "No",
+        record: "Record",
+        createdAt: "Created at",
+        updatedAt: "Updated at",
+        deleteTask: "Delete Task",
+        confirmDeleteTask: "Are you sure you want to delete the task",
     },
     pt: {
 
@@ -70,6 +83,19 @@ const messages = {
         overdue: "Em atraso",
         days: "dias",
         confirmDelete: "Tem a certeza que quer eliminar",
+
+        taskDetailsTitle: "Detalhes da Tarefa",
+        description: "Descrição",
+        noDescription: "Sem descrição.",
+        detailsSection: "Detalhes",
+        status: "Concluída",
+        yes: "Sim",
+        no: "Não",
+        record: "Registo",
+        createdAt: "Criado em",
+        updatedAt: "Atualizado em",
+        deleteTask: "Eliminar tarefa",
+        confirmDeleteTask: "Tem a certeza que quer eliminar a tarefa",
     }
 }
 

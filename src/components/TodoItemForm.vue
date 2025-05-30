@@ -70,7 +70,7 @@ onMounted(() => {
 
     breadcrumbs.value = [
       { text: 'Tarefas', link: '/' },
-      { text: tarefaExistente.nome, link: '/show' + id },
+      { text: tarefaExistente.nome, link: '/show/' + id },
       { text: 'Editar Tarefa' }
     ]
 

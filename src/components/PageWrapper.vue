@@ -120,7 +120,7 @@ function onLanguageChange(lang) {
 .custom-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
   content: "›";
   color: #6c757d;
-  padding: 0 0.5rem;
+  /* padding: 0 0.5rem; */
 }
 
 .custom-breadcrumb .breadcrumb-item a {

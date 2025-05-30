@@ -1,30 +1,27 @@
 <template>
-  <PageWrapper v-if="tarefa" title="Detalhes da Tarefa" :breadcrumbs="breadcrumbs" :buttons="buttons">
+  <PageWrapper v-if="tarefa" :title="t('taskDetailsTitle')" :breadcrumbs="breadcrumbs" :buttons="buttons">
     <template #icon>
       <i class="bi bi-list-check me-2"></i>
     </template>
 
-    <!-- Cabeçalho com nome da tarefa -->
     <div class="d-flex justify-content-between align-items-start flex-wrap mb-4">
       <h3 class="fw-bold text-primary mb-2">{{ tarefa.nome }}</h3>
     </div>
 
-    <!-- Descrição -->
     <section class="mb-4">
-      <h6 class="text-muted">Descrição</h6>
+      <h6 class="text-muted">{{ t('description') }}</h6>
       <p class="text-break mb-0">
-        {{ tarefa.descricao || 'Sem descrição.' }}
+        {{ tarefa.descricao || t('noDescription') }}
       </p>
     </section>
 
-    <!-- Detalhes -->
     <section class="mb-4">
-      <h6 class="text-muted">Detalhes</h6>
+      <h6 class="text-muted">{{ t('detailsSection') }}</h6>
       <div class="row gy-3">
         <div class="col-md-6 d-flex gap-2">
           <i class="bi bi-calendar-event text-info fs-5"></i>
           <div>
-            <strong>Data limite:</strong><br />
+            <strong>{{ t('dueDate') }}:</strong><br />
             {{ formatarData(tarefa.dataLimite) }}
           </div>
         </div>
@@ -32,7 +29,7 @@
         <div class="col-md-6 d-flex gap-2">
           <i class="bi bi-exclamation-circle text-warning fs-5"></i>
           <div>
-            <strong>Prioridade:</strong><br />
+            <strong>{{ t('priority') }}:</strong><br />
             <span class="badge" :class="{
               'bg-secondary': !tarefa.prioridade,
               'bg-success': tarefa.prioridade === 'baixa',
@@ -47,23 +44,22 @@
         <div class="col-md-6 d-flex gap-2">
           <i class="bi bi-check-circle fs-5" :class="tarefa.concluida ? 'text-success' : 'text-danger'"></i>
           <div>
-            <strong>Concluída:</strong><br />
+            <strong>{{ t('status') }}:</strong><br />
             <span class="badge" :class="tarefa.concluida ? 'bg-success' : 'bg-danger'">
-              {{ tarefa.concluida ? 'Sim' : 'Não' }}
+              {{ tarefa.concluida ? t('yes') : t('no') }}
             </span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Datas -->
     <section>
-      <h6 class="text-muted">Registo</h6>
+      <h6 class="text-muted">{{ t('record') }}</h6>
       <div class="row gy-3">
         <div class="col-md-6 d-flex gap-2">
           <i class="bi bi-clock-history text-secondary fs-5"></i>
           <div>
-            <strong>Criado em:</strong><br />
+            <strong>{{ t('createdAt') }}:</strong><br />
             {{ formatarData(tarefa.criadoEm) }}
           </div>
         </div>
@@ -71,43 +67,51 @@
         <div class="col-md-6 d-flex gap-2">
           <i class="bi bi-pencil-square text-secondary fs-5"></i>
           <div>
-            <strong>Atualizado em:</strong><br />
+            <strong>{{ t('updatedAt') }}:</strong><br />
             {{ formatarData(tarefa.atualizadoEm) }}
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Confirm Modal -->
-    <ConfirmModal :visible="showConfirmModal" title="Eliminar tarefa"
-      :message='`Tem a certeza que quer eliminar a tarefa "${tarefa.nome}"?`' @confirm="confirmarEliminar"
-      @cancel="cancelarEliminar" />
+    <ConfirmModal :visible="showConfirmModal" :title="t('deleteTask')" :message="mensagemEliminar"
+      @confirm="confirmarEliminar" @cancel="cancelarEliminar" />
   </PageWrapper>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import PageWrapper from '@/components/PageWrapper.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const tarefa = ref(null)
 const showConfirmModal = ref(false)
 
 const breadcrumbs = [
-  { text: 'Tarefas', link: '/' },
-  { text: 'Detalhes' }
+  { text: t('tasks'), link: '/' },
+  { text: t('details') }
 ]
+
+const prioridadeLabels = {
+  baixa: 'low',
+  media: 'medium',
+  alta: 'high'
+}
+
+const mensagemEliminar = computed(() => `${t('confirmDelete')} "${tarefa.nome}"?`)
 
 function formatarData(data) {
   return data ? new Date(data).toLocaleString() : 'N/A'
 }
 
-function converterPrioridade(prioridade) {
-  if (!prioridade) return 'N/A'
-  return prioridade.charAt(0).toUpperCase() + prioridade.slice(1).toLowerCase()
+function converterPrioridade(p) {
+  if (!p) return 'N/A'
+  return t(prioridadeLabels[p.toLowerCase()])
 }
 
 function carregarTarefa() {
@@ -138,16 +142,16 @@ function cancelarEliminar() {
 
 const buttons = [
   {
-    text: 'Editar',
+    text: 'edit',
     to: `/edit/${route.params.id}`,
     class: 'btn-warning',
-    attrs: { 'aria-label': 'Editar tarefa' }
+    attrs: { 'aria-label': 'edit' }
   },
   {
-    text: 'Eliminar',
+    text: 'delete',
     onClick: pedirConfirmacaoEliminar,
     class: 'btn-danger',
-    attrs: { 'aria-label': 'Eliminar tarefa' }
+    attrs: { 'aria-label': 'delete' }
   }
 ]
 
