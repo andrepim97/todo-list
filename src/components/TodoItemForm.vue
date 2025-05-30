@@ -70,7 +70,8 @@ onMounted(() => {
 
     breadcrumbs.value = [
       { text: 'Tarefas', link: '/' },
-      { text: tarefaExistente.nome, link: '/show' + id }
+      { text: tarefaExistente.nome, link: '/show' + id },
+      { text: 'Editar Tarefa' }
     ]
 
     if (tarefaExistente) {
@@ -83,7 +84,7 @@ onMounted(() => {
 
     breadcrumbs.value = [
       { text: 'Tarefas', link: '/' },
-      { text: 'Nova Tarefa', link: '/add' }
+      { text: 'Nova Tarefa' }
     ]
   }
 })

@@ -1,15 +1,8 @@
 <template>
-  <PageWrapper title="Lista de Tarefas" :show-back="false" :breadcrumbs="breadcrumbs">
+  <PageWrapper title="Lista de Tarefas" :show-back="false" :breadcrumbs="breadcrumbs" :buttons="buttons">
     <template #icon>
       <i class="bi bi-list-task me-2"></i>
     </template>
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="mb-0">Lista de Tarefas</h2>
-      <router-link to="/add">
-        <button class="btn btn-primary">Adicionar Tarefa</button>
-      </router-link>
-    </div>
 
     <!-- Campo de pesquisa (com ícone de lupa e input estilizado) -->
     <div class="mb-4">
@@ -52,7 +45,15 @@ const { tarefas, carregar } = useTarefas()
 const termoPesquisa = ref('')
 
 const breadcrumbs = [
-  { text: 'Tarefas', link: '/' },
+  { text: 'Tarefas' },
+]
+
+const buttons = [
+  {
+    text: 'Adicionar Tarefa',
+    to: '/add',
+    class: 'btn-primary'
+  }
 ]
 
 const tarefasFiltradas = computed(() => {
