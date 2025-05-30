@@ -1,5 +1,5 @@
 // composables/useTarefas.js
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 
 export function useTarefas() {
     const tarefas = ref([])
