@@ -1,10 +1,5 @@
 <template>
-  <PageWrapper
-    v-if="tarefa"
-    title="Detalhes da Tarefa"
-    :breadcrumbs="breadcrumbs"
-    :buttons="buttons"
-  >
+  <PageWrapper v-if="tarefa" title="Detalhes da Tarefa" :breadcrumbs="breadcrumbs" :buttons="buttons">
     <template #icon>
       <i class="bi bi-list-check me-2"></i>
     </template>
@@ -38,25 +33,19 @@
           <i class="bi bi-exclamation-circle text-warning fs-5"></i>
           <div>
             <strong>Prioridade:</strong><br />
-            <span
-              class="badge"
-              :class="{
-                'bg-secondary': !tarefa.prioridade,
-                'bg-success': tarefa.prioridade === 'baixa',
-                'bg-warning text-dark': tarefa.prioridade === 'media',
-                'bg-danger': tarefa.prioridade === 'alta'
-              }"
-            >
+            <span class="badge" :class="{
+              'bg-secondary': !tarefa.prioridade,
+              'bg-success': tarefa.prioridade === 'baixa',
+              'bg-warning text-dark': tarefa.prioridade === 'media',
+              'bg-danger': tarefa.prioridade === 'alta'
+            }">
               {{ converterPrioridade(tarefa.prioridade) }}
             </span>
           </div>
         </div>
 
         <div class="col-md-6 d-flex gap-2">
-          <i
-            class="bi bi-check-circle fs-5"
-            :class="tarefa.concluida ? 'text-success' : 'text-danger'"
-          ></i>
+          <i class="bi bi-check-circle fs-5" :class="tarefa.concluida ? 'text-success' : 'text-danger'"></i>
           <div>
             <strong>Concluída:</strong><br />
             <span class="badge" :class="tarefa.concluida ? 'bg-success' : 'bg-danger'">
@@ -88,6 +77,11 @@
         </div>
       </div>
     </section>
+
+    <!-- Confirm Modal -->
+    <ConfirmModal :visible="showConfirmModal" title="Eliminar tarefa"
+      :message='`Tem a certeza que quer eliminar a tarefa "${tarefa.nome}"?`' @confirm="confirmarEliminar"
+      @cancel="cancelarEliminar" />
   </PageWrapper>
 </template>
 
@@ -95,10 +89,12 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import PageWrapper from '@/components/PageWrapper.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const route = useRoute()
 const router = useRouter()
 const tarefa = ref(null)
+const showConfirmModal = ref(false)
 
 const breadcrumbs = [
   { text: 'Tarefas', link: '/' },
@@ -121,11 +117,23 @@ function carregarTarefa() {
 }
 
 function eliminarTarefa() {
-  if (!confirm('Tem a certeza que deseja eliminar esta tarefa?')) return
   const tarefas = JSON.parse(localStorage.getItem('tarefas') || '[]')
   const novasTarefas = tarefas.filter(t => t.id.toString() !== route.params.id)
   localStorage.setItem('tarefas', JSON.stringify(novasTarefas))
   router.push('/')
+}
+
+function pedirConfirmacaoEliminar() {
+  showConfirmModal.value = true
+}
+
+function confirmarEliminar() {
+  eliminarTarefa()
+  showConfirmModal.value = false
+}
+
+function cancelarEliminar() {
+  showConfirmModal.value = false
 }
 
 const buttons = [
@@ -137,7 +145,7 @@ const buttons = [
   },
   {
     text: 'Eliminar',
-    onClick: eliminarTarefa,
+    onClick: pedirConfirmacaoEliminar,
     class: 'btn-danger',
     attrs: { 'aria-label': 'Eliminar tarefa' }
   }

@@ -6,7 +6,7 @@
         class="fw-semibold">
         {{ tarefa.nome }}
         <span v-if="verificaAtraso(tarefa)" class="badge bg-danger ms-2">Em atraso ({{ calcularAtraso(tarefa)
-          }} dias)</span>
+        }} dias)</span>
       </router-link>
     </div>
 
@@ -14,15 +14,23 @@
       <router-link :to="'/edit/' + tarefa.id" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
         <i class="bi bi-pencil"></i> Editar
       </router-link>
-      <button @click="eliminarTarefa" class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1">
+      <button @click="pedirConfirmacaoEliminar" class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1">
         <i class="bi bi-trash"></i> Eliminar
       </button>
     </div>
   </li>
+  
+  <ConfirmModal :visible="showConfirmModal" title="Eliminar tarefa"
+    :message='`Tem a certeza que quer eliminar a tarefa "${tarefa.nome}"?`' @confirm="confirmarEliminar"
+    @cancel="cancelarEliminar" />
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, ref } from 'vue'
+
+import ConfirmModal from '@/components/ConfirmModal.vue'
+
+const showConfirmModal = ref(false)
 
 const props = defineProps({
   tarefa: {
@@ -73,13 +81,25 @@ function toggleConcluida(event) {
 }
 
 function eliminarTarefa() {
-  if (!confirm(`Tem a certeza que quer eliminar a tarefa "${props.tarefa.nome}"?`)) return
 
   let tarefas = JSON.parse(localStorage.getItem('tarefas') || '[]')
   tarefas = tarefas.filter(t => t.id !== props.tarefa.id)
   localStorage.setItem('tarefas', JSON.stringify(tarefas))
 
   emit('atualizar')
+}
+
+function pedirConfirmacaoEliminar() {
+  showConfirmModal.value = true
+}
+
+function confirmarEliminar() {
+  showConfirmModal.value = false
+  eliminarTarefa()
+}
+
+function cancelarEliminar() {
+  showConfirmModal.value = false
 }
 </script>
 
