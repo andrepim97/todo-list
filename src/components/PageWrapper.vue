@@ -1,18 +1,20 @@
 <template>
   <div class="container mt-4" style="max-width: 700px;">
 
-    <!-- Seletor de idioma no topo direita -->
-    <div class="d-flex justify-content-end mb-2">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <!-- Idioma -->
       <LanguageSelector @languageChange="onLanguageChange" />
+
+      <!-- Logout -->
+      <button class="btn btn-outline-secondary btn-sm" @click="logout">
+        <i class="bi bi-box-arrow-right me-1"></i> {{ t('logout') }}
+      </button>
     </div>
 
     <!-- Botão Back acima de tudo -->
     <div v-if="showBack" class="mb-2">
-      <router-link
-        to="/"
-        class="btn btn-link text-decoration-none d-inline-flex align-items-center gap-1 btn-back-top"
-        :aria-label="t('back')"
-      >
+      <router-link to="/" class="btn btn-link text-decoration-none d-inline-flex align-items-center gap-1 btn-back-top"
+        :aria-label="t('back')">
         <i class="bi bi-arrow-left-short fs-5"></i> {{ t('back') }}
       </router-link>
     </div>
@@ -20,13 +22,8 @@
     <!-- Breadcrumbs -->
     <nav v-if="breadcrumbs.length" aria-label="breadcrumb" class="mb-3">
       <ol class="breadcrumb custom-breadcrumb px-0">
-        <li
-          v-for="(crumb, index) in breadcrumbs"
-          :key="index"
-          class="breadcrumb-item"
-          :class="{ active: index === breadcrumbs.length - 1 }"
-          aria-current="page"
-        >
+        <li v-for="(crumb, index) in breadcrumbs" :key="index" class="breadcrumb-item"
+          :class="{ active: index === breadcrumbs.length - 1 }" aria-current="page">
           <template v-if="index !== breadcrumbs.length - 1">
             <router-link :to="crumb.link">{{ crumb.text }}</router-link>
           </template>
@@ -47,16 +44,9 @@
         <div class="d-flex align-items-center gap-2">
           <!-- Botões extras via prop -->
           <template v-if="buttons && buttons.length">
-            <component
-              v-for="(btn, i) in buttons"
-              :key="i"
-              :is="btn.to ? 'router-link' : 'button'"
-              :to="btn.to"
-              type="button"
-              @click="!btn.to && btn.onClick && btn.onClick()"
-              :class="['btn', btn.class || 'btn-primary']"
-              v-bind="btn.attrs || {}"
-            >
+            <component v-for="(btn, i) in buttons" :key="i" :is="btn.to ? 'router-link' : 'button'" :to="btn.to"
+              type="button" @click="!btn.to && btn.onClick && btn.onClick()"
+              :class="['btn', btn.class || 'btn-primary']" v-bind="btn.attrs || {}">
               {{ t(btn.text) }}
             </component>
           </template>
@@ -70,12 +60,15 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 import LanguageSelector from '@/components/LanguageSelector.vue'
 
 const { t, locale } = useI18n()
+
+const router = useRouter()
 
 defineProps({
   title: {
@@ -105,6 +98,18 @@ defineProps({
 function onLanguageChange(lang) {
   locale.value = lang
 }
+
+onMounted(() => {
+  const utilizador = localStorage.getItem('utilizador')
+  if (!utilizador) {
+    router.push('/login')
+  }
+})
+
+function logout() {
+  localStorage.removeItem('utilizador')
+  router.push('/login')
+}
 </script>
 
 <style scoped>
@@ -117,7 +122,7 @@ function onLanguageChange(lang) {
   user-select: none;
 }
 
-.custom-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+.custom-breadcrumb .breadcrumb-item+.breadcrumb-item::before {
   content: "›";
   color: #6c757d;
   /* padding: 0 0.5rem; */

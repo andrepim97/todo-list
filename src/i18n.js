@@ -3,6 +3,16 @@ import { createI18n } from 'vue-i18n'
 const messages = {
     en: {
 
+        login: "Login",
+        email: "Email",
+        password: "Password",
+        invalidCredentials: "Invalid credentials. Please try again.",
+        hide_password: "Hide",
+        show_password: "Show",
+
+
+        logout: "Logout",
+
         language_pt: "Portuguese",
         language_en: "English",
 
@@ -50,6 +60,15 @@ const messages = {
         confirmDeleteTask: "Are you sure you want to delete the task",
     },
     pt: {
+
+        login: "Iniciar Sessão",
+        email: "Email",
+        password: "Palavra-passe",
+        invalidCredentials: "Credenciais inválidas. Por favor, tente novamente.",
+        hide_password: "Ocultar",
+        show_password: "Ver",
+
+        logout: "Terminar sessão",
 
         language_pt: "Português",
         language_en: "Inglês",
