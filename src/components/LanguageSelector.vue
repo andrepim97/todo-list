@@ -18,17 +18,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const emit = defineEmits(['languageChange'])
 
 const { t } = useI18n()
 
-const idiomas = {
+const idiomas = computed(() => ({
   en: t('language_en'),
-  pt: t('language_pt'),
-}
+  pt: t('language_pt')
+}))
 
 const selectedLanguage = ref(localStorage.getItem('selectedLanguage') || 'pt')
 const open = ref(false)

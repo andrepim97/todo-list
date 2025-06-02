@@ -1,59 +1,76 @@
 <template>
-  <div class="container mt-4" style="max-width: 700px;">
+  <div>
+    <!-- Navbar moderna -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top">
+      <div class="container">
+        <!-- Logo ou nome da app -->
+        <router-link to="/" class="navbar-brand fw-bold">
+          ToDoApp
+        </router-link>
 
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <!-- Idioma -->
-      <LanguageSelector @languageChange="onLanguageChange" />
+        <!-- Toggle para mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+          aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-      <!-- Logout -->
-      <button class="btn btn-outline-secondary btn-sm" @click="logout">
-        <i class="bi bi-box-arrow-right me-1"></i> {{ t('logout') }}
-      </button>
-    </div>
-
-    <!-- Botão Back acima de tudo -->
-    <div v-if="showBack" class="mb-2">
-      <router-link to="/" class="btn btn-link text-decoration-none d-inline-flex align-items-center gap-1 btn-back-top"
-        :aria-label="t('back')">
-        <i class="bi bi-arrow-left-short fs-5"></i> {{ t('back') }}
-      </router-link>
-    </div>
-
-    <!-- Breadcrumbs -->
-    <nav v-if="breadcrumbs.length" aria-label="breadcrumb" class="mb-3">
-      <ol class="breadcrumb custom-breadcrumb px-0">
-        <li v-for="(crumb, index) in breadcrumbs" :key="index" class="breadcrumb-item"
-          :class="{ active: index === breadcrumbs.length - 1 }" aria-current="page">
-          <template v-if="index !== breadcrumbs.length - 1">
-            <router-link :to="crumb.link">{{ crumb.text }}</router-link>
-          </template>
-          <template v-else>
-            {{ crumb.text }}
-          </template>
-        </li>
-      </ol>
-    </nav>
-
-    <div class="card shadow-sm rounded">
-      <div class="card-header d-flex justify-content-between align-items-center gap-3">
-        <h4 class="mb-0 d-flex align-items-center gap-2">
-          <slot name="icon" />
-          {{ title }}
-        </h4>
-
-        <div class="d-flex align-items-center gap-2">
-          <!-- Botões extras via prop -->
-          <template v-if="buttons && buttons.length">
-            <component v-for="(btn, i) in buttons" :key="i" :is="btn.to ? 'router-link' : 'button'" :to="btn.to"
-              type="button" @click="!btn.to && btn.onClick && btn.onClick()"
-              :class="['btn', btn.class || 'btn-primary']" v-bind="btn.attrs || {}">
-              {{ t(btn.text) }}
-            </component>
-          </template>
+        <!-- Conteúdo da navbar -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <div class="ms-auto d-flex align-items-center gap-3">
+            <LanguageSelector @languageChange="onLanguageChange" />
+            <button class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1" @click="logout">
+              <i class="bi bi-box-arrow-right"></i> {{ t('logout') }}
+            </button>
+          </div>
         </div>
       </div>
-      <div class="card-body">
-        <slot />
+    </nav>
+
+    <!-- Conteúdo da página -->
+    <div class="container mt-4" style="max-width: 700px;">
+      <!-- Botão Back acima de tudo -->
+      <div v-if="showBack" class="mb-2">
+        <router-link to="/" class="btn btn-link text-decoration-none d-inline-flex align-items-center gap-1 btn-back-top"
+          :aria-label="t('back')">
+          <i class="bi bi-arrow-left-short fs-5"></i> {{ t('back') }}
+        </router-link>
+      </div>
+
+      <!-- Breadcrumbs -->
+      <nav v-if="breadcrumbs.length" aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb custom-breadcrumb px-0">
+          <li v-for="(crumb, index) in breadcrumbs" :key="index" class="breadcrumb-item"
+            :class="{ active: index === breadcrumbs.length - 1 }" aria-current="page">
+            <template v-if="index !== breadcrumbs.length - 1">
+              <router-link :to="crumb.link">{{ crumb.text }}</router-link>
+            </template>
+            <template v-else>
+              {{ crumb.text }}
+            </template>
+          </li>
+        </ol>
+      </nav>
+
+      <div class="card shadow-sm rounded">
+        <div class="card-header d-flex justify-content-between align-items-center gap-3">
+          <h4 class="mb-0 d-flex align-items-center gap-2">
+            <slot name="icon" />
+            {{ title }}
+          </h4>
+
+          <div class="d-flex align-items-center gap-2">
+            <template v-if="buttons && buttons.length">
+              <component v-for="(btn, i) in buttons" :key="i" :is="btn.to ? 'router-link' : 'button'" :to="btn.to"
+                type="button" @click="!btn.to && btn.onClick && btn.onClick()"
+                :class="['btn', btn.class || 'btn-primary']" v-bind="btn.attrs || {}">
+                {{ t(btn.text) }}
+              </component>
+            </template>
+          </div>
+        </div>
+        <div class="card-body">
+          <slot />
+        </div>
       </div>
     </div>
   </div>
@@ -67,7 +84,6 @@ import { useRouter } from 'vue-router'
 import LanguageSelector from '@/components/LanguageSelector.vue'
 
 const { t, locale } = useI18n()
-
 const router = useRouter()
 
 defineProps({
@@ -86,12 +102,6 @@ defineProps({
   buttons: {
     type: Array,
     default: () => []
-    /*
-      [
-        { text: 'edit', to: '/edit', class: 'btn-warning' },
-        { text: 'delete', onClick: () => {}, class: 'btn-danger' }
-      ]
-    */
   }
 })
 
@@ -113,7 +123,6 @@ function logout() {
 </script>
 
 <style scoped>
-/* Breadcrumbs customizadas */
 .custom-breadcrumb {
   font-size: 0.9rem;
   background: transparent;
@@ -125,7 +134,6 @@ function logout() {
 .custom-breadcrumb .breadcrumb-item+.breadcrumb-item::before {
   content: "›";
   color: #6c757d;
-  /* padding: 0 0.5rem; */
 }
 
 .custom-breadcrumb .breadcrumb-item a {
@@ -146,7 +154,6 @@ function logout() {
   pointer-events: none;
 }
 
-/* Botão Back (acima da card) */
 .btn-back-top {
   color: #495057;
   font-weight: 500;
