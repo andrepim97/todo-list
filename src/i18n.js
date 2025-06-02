@@ -10,7 +10,6 @@ const messages = {
         hide_password: "Hide",
         show_password: "Show",
 
-
         logout: "Logout",
 
         language_pt: "Portuguese",
@@ -58,6 +57,8 @@ const messages = {
         updatedAt: "Updated at",
         deleteTask: "Delete Task",
         confirmDeleteTask: "Are you sure you want to delete the task",
+
+        back_to_top: "Back to top",
     },
     pt: {
 
@@ -115,6 +116,8 @@ const messages = {
         updatedAt: "Atualizado em",
         deleteTask: "Eliminar tarefa",
         confirmDeleteTask: "Tem a certeza que quer eliminar a tarefa",
+
+        back_to_top: "Voltar ao topo",
     }
 }
 

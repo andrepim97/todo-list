@@ -51,6 +51,9 @@
         </div>
       </div>
     </div>
+    
+    <!-- Footer -->
+    <AppFooter />
   </div>
 </template>
 
@@ -60,8 +63,9 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
 import AppNavbar from '@/components/AppNavbar.vue'
+import AppFooter from '@/components/AppFooter.vue'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const router = useRouter()
 
 defineProps({
@@ -83,10 +87,6 @@ defineProps({
   }
 })
 
-function onLanguageChange(lang) {
-  locale.value = lang
-}
-
 onMounted(() => {
   const utilizador = localStorage.getItem('utilizador')
   if (!utilizador) {
@@ -94,10 +94,6 @@ onMounted(() => {
   }
 })
 
-function logout() {
-  localStorage.removeItem('utilizador')
-  router.push('/login')
-}
 </script>
 
 <style scoped>
