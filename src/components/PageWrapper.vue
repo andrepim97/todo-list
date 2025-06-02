@@ -1,36 +1,14 @@
 <template>
   <div>
-    <!-- Navbar moderna -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm sticky-top">
-      <div class="container">
-        <!-- Logo ou nome da app -->
-        <router-link to="/" class="navbar-brand fw-bold">
-          ToDoApp
-        </router-link>
-
-        <!-- Toggle para mobile -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-          aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Conteúdo da navbar -->
-        <div class="collapse navbar-collapse" id="navbarContent">
-          <div class="ms-auto d-flex align-items-center gap-3">
-            <LanguageSelector @languageChange="onLanguageChange" />
-            <button class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1" @click="logout">
-              <i class="bi bi-box-arrow-right"></i> {{ t('logout') }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <!-- Navbar -->
+    <AppNavbar />
 
     <!-- Conteúdo da página -->
     <div class="container mt-4" style="max-width: 700px;">
       <!-- Botão Back acima de tudo -->
       <div v-if="showBack" class="mb-2">
-        <router-link to="/" class="btn btn-link text-decoration-none d-inline-flex align-items-center gap-1 btn-back-top"
+        <router-link to="/"
+          class="btn btn-link text-decoration-none d-inline-flex align-items-center gap-1 btn-back-top"
           :aria-label="t('back')">
           <i class="bi bi-arrow-left-short fs-5"></i> {{ t('back') }}
         </router-link>
@@ -81,7 +59,7 @@ import { defineProps, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
-import LanguageSelector from '@/components/LanguageSelector.vue'
+import AppNavbar from '@/components/AppNavbar.vue'
 
 const { t, locale } = useI18n()
 const router = useRouter()
