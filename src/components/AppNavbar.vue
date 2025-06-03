@@ -62,7 +62,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { signOut } from 'firebase/auth'
+import { signOut, onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/plugins/firebase'
 import { ref, onMounted } from 'vue'
 
@@ -95,13 +95,13 @@ function getUserInitials(name) {
 const userInitials = ref('U')
 
 onMounted(() => {
-    const user = auth.currentUser
-    if (user) {
-        console.log(user);
-        userName.value = user.displayName || user.email || 'Utilizador'
-        userPhotoURL.value = user.photoURL || null
-        userInitials.value = getUserInitials(user.displayName || user.email)
-    }
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            userName.value = user.displayName || user.email || 'Utilizador'
+            userPhotoURL.value = user.photoURL || null
+            userInitials.value = getUserInitials(user.displayName || user.email)
+        }
+    })
 })
 </script>
 

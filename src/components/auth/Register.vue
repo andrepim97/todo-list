@@ -46,7 +46,7 @@ import AuthWrapper from './AuthWrapper.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { auth } from '@/plugins/firebase'
 
 const { t } = useI18n()
@@ -69,7 +69,12 @@ async function register() {
       return
     }
 
-    await createUserWithEmailAndPassword(auth, email.value, password.value)
+    const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
+
+    await updateProfile(userCredential.user, {
+      displayName: name.value
+    })
+
     router.push('/')
   } catch (e) {
     erro.value = t('error_creating_account')

@@ -35,6 +35,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { db } from '@/plugins/firebase'
 import { doc, setDoc, updateDoc, getDoc } from 'firebase/firestore'
+import { auth } from '@/plugins/firebase'
 import { useTarefas } from '@/composables/useTarefas'
 
 import Input from '@/components/ui/Input.vue'
@@ -100,26 +101,11 @@ async function guardarTarefa() {
   formTentado.value = true
   if (!validarCampos()) return
 
-  const tarefaData = {
-    nome: novaTarefa.value.nome.trim(),
-    descricao: novaTarefa.value.descricao.trim(),
-    dataLimite: novaTarefa.value.dataLimite,
-    prioridade: novaTarefa.value.prioridade || '',
-    atualizadoEm: new Date().toISOString(),
-  }
-
   try {
-    if (isEditar.value) {
-      const ref = doc(db, 'tarefas', novaTarefa.value.id)
-      await updateDoc(ref, tarefaData)
-    } else {
-      const id = Date.now().toString()
-      const ref = doc(db, 'tarefas', id)
-      await setDoc(ref, { ...tarefaData, id, criadoEm: new Date().toISOString(), concluida: false })
-    }
+    await guardar(novaTarefa.value)
     router.push('/')
-  } catch (e) {
-    console.error('Erro ao guardar tarefa:', e)
+  } catch (error) {
+    console.error('Erro ao guardar tarefa:', error)
     alert('Erro ao guardar tarefa.')
   }
 }

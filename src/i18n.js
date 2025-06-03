@@ -111,7 +111,7 @@ const messages = {
         priority: "Prioridade",
         ascending: "Ascendente",
         descending: "Descendente",
-        resetFilters: "Resetar filtros",
+        resetFilters: "Limpar Filtros",
         noTasksFound: "Nenhuma tarefa encontrada",
         tasks: "Tarefas",
         task: "Tarefa",
