@@ -54,26 +54,32 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const isAuthPage = ['Login', 'Register'].includes(to.name)
 
-  const checkAuth = () => {
-    const user = auth.currentUser
+  const user = auth.currentUser
+
+  if (user !== null) {
     if (requiresAuth && !user) {
       next('/login')
+    } else if (user && isAuthPage) {
+      next('/')
     } else {
       next()
     }
-  }
-
-  if (auth.currentUser !== null) {
-    // Já sabemos o estado do utilizador
-    checkAuth()
   } else {
-    // Esperamos até o Firebase confirmar o estado
-    onAuthStateChanged(auth, () => {
-      checkAuth()
+    // Se ainda não sabemos se está autenticado, aguardamos evento uma vez
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      unsubscribe() // para não ouvir mais vezes
+
+      if (requiresAuth && !firebaseUser) {
+        next('/login')
+      } else if (firebaseUser && isAuthPage) {
+        next('/')
+      } else {
+        next()
+      }
     })
   }
 })
-
 
 export default router

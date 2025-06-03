@@ -65,6 +65,8 @@ const messages = {
         deleteTask: "Delete Task",
         confirmDeleteTask: "Are you sure you want to delete the task",
 
+        profile: "Profile",
+
         back_to_top: "Back to top",
     },
     pt: {
@@ -130,6 +132,8 @@ const messages = {
         updatedAt: "Atualizado em",
         deleteTask: "Eliminar tarefa",
         confirmDeleteTask: "Tem a certeza que quer eliminar a tarefa",
+
+        profile: "Perfil",
 
         back_to_top: "Voltar ao topo",
     }
