@@ -9,6 +9,13 @@ const messages = {
         invalidCredentials: "Invalid credentials. Please try again.",
         hide_password: "Hide",
         show_password: "Show",
+        no_account_register: "Don't have an account? Register",
+
+        register: "Register",
+        name: "Name",
+        confirm_password: "Confirm password",
+        passwords_do_not_match: "Passwords do not match",
+        already_have_account: "Already have an account? Log in",
 
         logout: "Logout",
 
@@ -68,8 +75,15 @@ const messages = {
         invalidCredentials: "Credenciais inválidas. Por favor, tente novamente.",
         hide_password: "Ocultar",
         show_password: "Ver",
+        no_account_register: "Ainda não tem conta? Registe-se",
 
         logout: "Terminar sessão",
+
+        register: "Registar",
+        name: "Nome",
+        confirm_password: "Confirmar palavra-passe",
+        passwords_do_not_match: "As palavras-passe não coincidem",
+        already_have_account: "Já tem conta? Inicie sessão",
 
         language_pt: "Português",
         language_en: "Inglês",

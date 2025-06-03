@@ -27,6 +27,12 @@
                     aria-hidden="true"></span>
                 {{ t('login') }}
             </button>
+
+            <div class="text-center mt-3">
+                <router-link to="/register" class="small-link">
+                    {{ t('no_account_register') }}
+                </router-link>
+            </div>
         </form>
     </AuthWrapper>
 </template>
@@ -74,83 +80,3 @@ onMounted(() => {
     }
 })
 </script>
-
-<style scoped>
-.form-label {
-    font-weight: 600;
-    color: #444;
-    margin-bottom: 0.5rem;
-}
-
-.form-control {
-    border-radius: 8px;
-    border: 1.5px solid #ddd;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
-}
-
-.is-invalid {
-    border-color: #dc3545 !important;
-}
-
-.input-group {
-    display: flex;
-    align-items: center;
-    border-radius: 8px;
-    border: 1.5px solid #ddd;
-    overflow: hidden;
-    transition: border-color 0.3s ease;
-}
-
-.input-group:focus-within {
-    border-color: #667eea;
-    box-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
-}
-
-.btn-primary {
-    background: #667eea;
-    border: none;
-    font-weight: 600;
-    font-size: 1.1rem;
-    padding: 0.75rem;
-    border-radius: 8px;
-    transition: background 0.3s ease;
-}
-
-.btn-primary:hover:not(:disabled) {
-    background: #5a6edc;
-}
-
-.btn-primary:disabled {
-    background: #a3aedf;
-    cursor: not-allowed;
-}
-
-.alert-danger {
-    border-radius: 8px;
-    background-color: #f8d7da;
-    color: #842029;
-    font-weight: 600;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
-    user-select: none;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.4s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-}
-</style>
