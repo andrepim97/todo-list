@@ -9,6 +9,7 @@ import TodoList from '../components/TodoList.vue'
 import TodoItemForm from '@/components/TodoItemForm.vue'
 import TodoItemShow from '@/components/TodoItemShow.vue'
 import Register from '@/components/auth/Register.vue'
+import Profile from '@/components/Profile.vue'
 
 const routes = [
   {
@@ -43,6 +44,12 @@ const routes = [
     path: '/edit/:id',
     name: 'EditTodo',
     component: TodoItemForm,
+    meta: { requiresAuth: true }
+  },
+    {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
     meta: { requiresAuth: true }
   }
 ]
