@@ -51,14 +51,14 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Footer -->
     <AppFooter />
   </div>
 </template>
 
 <script setup>
-import { defineProps, onMounted } from 'vue'
+import { defineProps } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
@@ -86,15 +86,8 @@ defineProps({
     default: () => []
   }
 })
-
-onMounted(() => {
-  const utilizador = localStorage.getItem('utilizador')
-  if (!utilizador) {
-    router.push('/login')
-  }
-})
-
 </script>
+
 
 <style scoped>
 .custom-breadcrumb {
