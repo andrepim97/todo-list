@@ -72,6 +72,8 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { db } from '@/plugins/firebase'
 
 import { useTarefas } from '@/composables/useTarefas.js'
 
@@ -79,7 +81,6 @@ import PageWrapper from '@/components/PageWrapper.vue'
 import TodoItem from './TodoItem.vue'
 
 const { t } = useI18n()
-
 const { tarefas, carregar } = useTarefas()
 
 const termoPesquisa = ref('')
@@ -88,52 +89,46 @@ const filtroEstado = ref('')
 const ordenarPor = ref('criadoEm')
 const ordemAscendente = ref(false)
 
-const STORAGE_KEY = 'tarefasFiltrosEstado'
+const filtrosDocRef = doc(db, 'preferencias', 'filtros')
 
-const breadcrumbs = [
-    { text: t('tasks') },
-]
+const breadcrumbs = [{ text: t('tasks') }]
+const buttons = [{ text: 'addTask', to: '/add', class: 'btn-primary' }]
 
-const buttons = [
-    {
-        text: 'addTask',
-        to: '/add',
-        class: 'btn-primary',
-    },
-]
-
-// Recuperar filtros do localStorage
-onMounted(() => {
+// Recuperar filtros do Firestore
+onMounted(async () => {
     carregar()
-    const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved) {
-        try {
-            const estado = JSON.parse(saved)
-            termoPesquisa.value = estado.termoPesquisa ?? ''
-            filtroPrioridade.value = estado.filtroPrioridade ?? ''
-            filtroEstado.value = estado.filtroEstado ?? ''
-            ordenarPor.value = estado.ordenarPor ?? 'criadoEm'
-            ordemAscendente.value = estado.ordemAscendente ?? false
-        } catch {
-            // falhar silenciosamente
+
+    try {
+        const snap = await getDoc(filtrosDocRef)
+        if (snap.exists()) {
+            const dados = snap.data()
+            termoPesquisa.value = dados.termoPesquisa ?? ''
+            filtroPrioridade.value = dados.filtroPrioridade ?? ''
+            filtroEstado.value = dados.filtroEstado ?? ''
+            ordenarPor.value = dados.ordenarPor ?? 'criadoEm'
+            ordemAscendente.value = dados.ordemAscendente ?? false
         }
+    } catch (e) {
+        console.warn('Erro ao carregar filtros:', e)
     }
 })
 
-// Guardar filtros no localStorage sempre que mudarem
+// Guardar filtros no Firestore sempre que mudarem
 watch(
     [termoPesquisa, filtroPrioridade, filtroEstado, ordenarPor, ordemAscendente],
-    ([tp, fp, fe, op, oa]) => {
-        const estado = {
-            termoPesquisa: tp,
-            filtroPrioridade: fp,
-            filtroEstado: fe,
-            ordenarPor: op,
-            ordemAscendente: oa,
+    async ([tp, fp, fe, op, oa]) => {
+        try {
+            await setDoc(filtrosDocRef, {
+                termoPesquisa: tp,
+                filtroPrioridade: fp,
+                filtroEstado: fe,
+                ordenarPor: op,
+                ordemAscendente: oa
+            })
+        } catch (e) {
+            console.warn('Erro ao guardar filtros:', e)
         }
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(estado))
-    },
-    { deep: true }
+    }
 )
 
 const tarefasFiltradas = computed(() => {
@@ -151,30 +146,31 @@ const tarefasFiltradas = computed(() => {
 
     resultado.sort((a, b) => {
         let comparador = 0
-
         if (ordenarPor.value === 'dataLimite') {
             comparador = new Date(a.dataLimite) - new Date(b.dataLimite)
         } else if (ordenarPor.value === 'prioridade') {
-            const pesoA = prioridadePeso[a.prioridade] ?? 0
-            const pesoB = prioridadePeso[b.prioridade] ?? 0
-            comparador = pesoA - pesoB
+            comparador = (prioridadePeso[a.prioridade] || 0) - (prioridadePeso[b.prioridade] || 0)
         } else if (ordenarPor.value === 'criadoEm') {
             comparador = new Date(a.criadoEm) - new Date(b.criadoEm)
         }
-
         return ordemAscendente.value ? comparador : -comparador
     })
 
     return resultado
 })
 
-// Função para resetar filtros
 function resetFilters() {
     termoPesquisa.value = ''
     filtroPrioridade.value = ''
     filtroEstado.value = ''
     ordenarPor.value = 'criadoEm'
     ordemAscendente.value = false
-    localStorage.removeItem(STORAGE_KEY)
+    setDoc(filtrosDocRef, {
+        termoPesquisa: '',
+        filtroPrioridade: '',
+        filtroEstado: '',
+        ordenarPor: 'criadoEm',
+        ordemAscendente: false
+    })
 }
 </script>

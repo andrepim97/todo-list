@@ -85,12 +85,14 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import PageWrapper from '@/components/PageWrapper.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import { useTarefas } from '@/composables/useTarefas'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const tarefa = ref(null)
 const showConfirmModal = ref(false)
+const { tarefas, carregar, apagar } = useTarefas()
 
 const breadcrumbs = [
   { text: t('tasks'), link: '/' },
@@ -114,16 +116,15 @@ function converterPrioridade(p) {
   return t(prioridadeLabels[p.toLowerCase()])
 }
 
-function carregarTarefa() {
-  const tarefas = JSON.parse(localStorage.getItem('tarefas') || '[]')
-  tarefa.value = tarefas.find(t => t.id.toString() === route.params.id)
+async function carregarTarefa() {
+  await carregar()
+  const tarefasSalvas = tarefas.value
+  tarefa.value = tarefasSalvas.find(t => t.id.toString() === route.params.id)
   if (!tarefa.value) router.push('/')
 }
 
-function eliminarTarefa() {
-  const tarefas = JSON.parse(localStorage.getItem('tarefas') || '[]')
-  const novasTarefas = tarefas.filter(t => t.id.toString() !== route.params.id)
-  localStorage.setItem('tarefas', JSON.stringify(novasTarefas))
+async function eliminarTarefa() {
+  await apagar(route.params.id)
   router.push('/')
 }
 
