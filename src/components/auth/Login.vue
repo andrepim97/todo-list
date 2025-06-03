@@ -42,6 +42,8 @@ import AuthWrapper from './AuthWrapper.vue'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
+import { auth } from '@/plugins/firebase'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -52,31 +54,26 @@ const erro = ref('')
 const loading = ref(false)
 const mostrarPassword = ref(false)
 
-function login() {
+async function login() {
     erro.value = ''
     loading.value = true
 
-    setTimeout(() => {
-        const utilizadorValido = {
-            email: 'admin@exemplo.com',
-            password: '123456'
-        }
-
-        if (email.value === utilizadorValido.email && password.value === utilizadorValido.password) {
-            localStorage.setItem('utilizador', JSON.stringify({ email: email.value }))
-            router.push('/')
-        } else {
-            erro.value = t('invalidCredentials')
-        }
-
+    try {
+        await signInWithEmailAndPassword(auth, email.value, password.value)
+        router.push('/')
+    } catch (e) {
+        erro.value = t('invalidCredentials')
+        console.error(e)
+    } finally {
         loading.value = false
-    }, 800)
+    }
 }
 
 onMounted(() => {
-    const utilizador = localStorage.getItem('utilizador')
-    if (utilizador) {
-        router.push('/')
-    }
+    onAuthStateChanged(auth, user => {
+        if (user) {
+            router.push('/')
+        }
+    })
 })
 </script>

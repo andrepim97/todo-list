@@ -31,6 +31,9 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { signOut } from 'firebase/auth'
+import { auth } from '@/plugins/firebase'
+
 import LanguageSelector from '@/components/LanguageSelector.vue'
 
 const { t, locale } = useI18n()
@@ -41,7 +44,7 @@ function onLanguageChange(lang) {
 }
 
 function logout() {
-    localStorage.removeItem('utilizador')
+    signOut(auth)
     router.push('/login')
 }
 </script>

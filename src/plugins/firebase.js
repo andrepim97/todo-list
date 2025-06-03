@@ -1,8 +1,7 @@
 // src/plugins/firebase.js
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-// Importa outros serviços Firebase que pretendas usar (e.g., getAuth para autenticação)
-// import { getAuth } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAlkS_oywFwXnurwF51RSUBMabIzZaai_c",
@@ -21,7 +20,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Obtém uma referência para a autenticação (se fores usar)
-// const auth = getAuth(app);
+const auth = getAuth(app);
 
 // Exporta as instâncias para usar nos teus componentes
-export { db, app }; // E auth, se usares
+export { db, app, auth }; // E auth, se usares

@@ -46,6 +46,8 @@ import AuthWrapper from './AuthWrapper.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '@/plugins/firebase'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -57,20 +59,23 @@ const confirmPassword = ref('')
 const erro = ref('')
 const loading = ref(false)
 
-function register() {
+async function register() {
   erro.value = ''
   loading.value = true
 
-  setTimeout(() => {
+  try {
     if (password.value !== confirmPassword.value) {
       erro.value = t('passwords_do_not_match')
-    } else {
-      // Simulação de registo com armazenamento local
-      localStorage.setItem('utilizador', JSON.stringify({ name: name.value, email: email.value }))
-      router.push('/')
+      return
     }
 
+    await createUserWithEmailAndPassword(auth, email.value, password.value)
+    router.push('/')
+  } catch (e) {
+    erro.value = t('error_creating_account')
+    console.error(e)
+  } finally {
     loading.value = false
-  }, 800)
+  }
 }
 </script>
